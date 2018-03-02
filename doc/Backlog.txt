@@ -1,0 +1,3 @@
+As a user I want to see Welcome Screen Dev Game (In progress)
+As a user I want to exit the game with confirmation when I use Ctr+Q key
+
