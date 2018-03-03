@@ -1,3 +1,4 @@
-As a user I want to see Welcome Screen Dev Game (In progress)
-As a user I want to exit the game with confirmation when I use Ctr+Q key
+S1      As a user I want to see Welcome Screen Dev Game (Done)
+S2      As a user I want to exit the game with confirmation when I use Ctr+Q key (In progress)
+S3      As a user I want to move player tru the screen 
 
