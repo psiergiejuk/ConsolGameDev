@@ -14,7 +14,7 @@ import urwid
 
 __author__ = "Paweł Siergiejuk"
 __date__ = "03/03/2018"
-__time__ = "00:21:33"
+__time__ = "21:32:09"
 __version__ = "v0.0"
 __email__ = "pawelsiergiejuk@gmail.com"
 __status__ = "Development"
@@ -34,34 +34,7 @@ class GameView(urwid.WidgetWrap):
         (MVC) Class that handle GUI
 
     """
-    palette = [
-        ('body',         'black',      'light gray', 'standout'),
-        ('header',       'white',      'dark red',   'bold'),
-        ('screen edge',  'light blue', 'dark cyan'),
-        ('main shadow',  'dark gray',  'black'),
-        ('line',         'black',      'light gray', 'standout'),
-        ('bg background','light gray', 'black'),
-        ('bg 1',         'black',      'dark blue', 'standout'),
-        ('bg 1 smooth',  'dark blue',  'black'),
-        ('bg 2',         'black',      'dark cyan', 'standout'),
-        ('bg 2 smooth',  'dark cyan',  'black'),
-        ('button normal','light gray', 'dark blue', 'standout'),
-        ('button select','white',      'dark green'),
-        ('line',         'black',      'light gray', 'standout'),
-        ('pg normal',    'white',      'black', 'standout'),
-        ('pg complete',  'white',      'dark magenta'),
-        ('pg smooth',     'dark magenta','black')
-        ]
-    
-    def __init__(self, controller):
-        self.controller = controller
-        urwid.WidgetWrap.__init__(self, self.main_window())
-
-    def main_window(self):
-        w = urwid.BarGraph(['bg background','bg 1','bg 2'], satt=None)
-        return w
-
-    def update_graph(self, force_update=False):
+    def __init__(self):
         pass
 
 class GameController():
@@ -71,32 +44,52 @@ class GameController():
     """
     
     def __init__(self):
-        self.view = GameView(self)
-        self.model = GameModel()
-        self.loop = None
+        pass
 
     def main(self):
-        self.loop = urwid.MainLoop(self.view, self.view.palette)
-        self.loop.run()
+        palette = [
+            ('titlebar', 'dark red,bold', ''),
+            ('option button', 'dark green,bold', ''),
+            ('quit button', 'dark red', ''),
+            ('getting quote', 'dark blue', ''),
+            ('headers', 'white,bold', ''),
+            ('change ', 'dark green', ''),
+            ('change negative', 'dark red', '')]
+
+        header_text = urwid.Text(u' Dev Game v0.1')
+        header = urwid.AttrMap(header_text, 'titlebar')
+
+        # Create the menu
+        menu = urwid.Text([
+            u'Press (', ('option button', u'P'), u') to open Property. ',
+            u'Press (', ('quit button', u'Q'), u') to quit.'
+        ])
+
+        # Create the quotes box
+        quote_text = urwid.Text(u'Press (S) to start the game!')
+        quote_filler = urwid.Filler(quote_text, valign='top', top=1, bottom=1)
+        v_padding = urwid.Padding(quote_filler, left=1, right=1)
+        quote_box = urwid.LineBox(v_padding)
+
+        # Assemble the widgets
+        layout = urwid.Frame(header=header, body=quote_box, footer=menu)
+        def handle_input(key):
+            if key == 'R' or key == 'r':
+                refresh(main_loop, '')
+
+            if key == 'Q' or key == 'q':
+                raise urwid.ExitMainLoop()
+
+        def refresh(_loop, _data):
+            print("refresh")
+
+        main_loop = urwid.MainLoop(layout, palette, unhandled_input=handle_input)
+        main_loop.set_alarm_in(0, refresh)
+        main_loop.run()
 
 
 if __name__ == "__main__":
-    def exit_on_q(key):
-        if key in ('q', 'Q'):
-            raise urwid.ExitMainLoop()
-
-    palette = [
-        ('banner', 'black', 'light gray'),
-        ('streak', 'black', 'dark red'),
-        ('bg', 'black', 'dark blue'),]
-
-    txt = urwid.Text(('banner', u" Welcome in Dev Game"), align='center')
-    map1 = urwid.AttrMap(txt, 'streak')
-    fill = urwid.Filler(map1)
-    map2 = urwid.AttrMap(fill, 'bg')
-    loop = urwid.MainLoop(map2, palette, unhandled_input=exit_on_q)
-    loop.run()
-    #game = GameController()
-    #game.main()
+    game = GameController()
+    game.main()
 
 
