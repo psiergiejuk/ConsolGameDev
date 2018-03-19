@@ -1,4 +1,12 @@
 S1      As a user I want to see Welcome Screen Dev Game (Done)
 S2      As a user I want to exit the game with confirmation when I use Ctr+Q key (In progress)
-S3      As a user I want to move player tru the screen 
+S4      As a user I want to have console to be able to type code in it (No run)
+S5      As a user I want to run code from console in python interpreter
+S6      As a user I want to have aceess to User Object to be able to edit user
+S7      As a user I want to save user object to disk to save a user progress 
+S8      As a user I want to be able to add my own libraries to performe some more advance action
+S9      As a user I want to have build method in User Object to be able to navigate over the map
+S10     As a user I want to be able to find free sapce on the map (disk space) to save User Object
+S11     As a user I want to every free save space have it own size if User Object is greater he can't be save in this location 
+S12     As a user I want to be able to connect to main loop to be able to map keys to User Object method
 
