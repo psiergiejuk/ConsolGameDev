@@ -12,30 +12,16 @@ This is main file of the game
 import sys
 import urwid
 
+from GameView import GameView
+from GameModel import GameModel
+
 __author__ = "Paweł Siergiejuk"
-__date__ = "03/03/2018"
-__time__ = "21:32:09"
+__date__ = "20/03/2018"
+__time__ = "23:23:07"
 __version__ = "v0.0"
 __email__ = "pawelsiergiejuk@gmail.com"
 __status__ = "Development"
 
-
-class GameModel():
-    """
-        (MVC) Class that handle model
-
-    """
-    
-    def __init__(self):
-        pass
-
-class GameView(urwid.WidgetWrap):
-    """
-        (MVC) Class that handle GUI
-
-    """
-    def __init__(self):
-        pass
 
 class GameController():
     """
@@ -44,48 +30,35 @@ class GameController():
     """
     
     def __init__(self):
-        pass
+        self.game = GameModel()
+        self.view = GameView(self)
+        self.main_loop = None
+
+    def handle_input(self, key):
+        if key == 'f12':
+            self.confirm_exit()
+        else:
+            pass
+
+    def confirm_exit(self):
+        self.game.exit_request()
+        if self.view.confirm_exit():
+            raise urwid.ExitMainLoop()
+
+    def refresh(self, _loop, _data):
+        self.view.refresh_view()
+        self.main_loop.draw_screen()
+        self.main_loop.set_alarm_in(1, self.refresh)
+
+    def get_game_mode(self):
+        return self.game.get_game_mode()
 
     def main(self):
-        palette = [
-            ('titlebar', 'dark red,bold', ''),
-            ('option button', 'dark green,bold', ''),
-            ('quit button', 'dark red', ''),
-            ('getting quote', 'dark blue', ''),
-            ('headers', 'white,bold', ''),
-            ('change ', 'dark green', ''),
-            ('change negative', 'dark red', '')]
 
-        header_text = urwid.Text(u' Dev Game v0.1')
-        header = urwid.AttrMap(header_text, 'titlebar')
 
-        # Create the menu
-        menu = urwid.Text([
-            u'Press (', ('option button', u'P'), u') to open Property. ',
-            u'Press (', ('quit button', u'Q'), u') to quit.'
-        ])
-
-        # Create the quotes box
-        quote_text = urwid.Text(u'Press (S) to start the game!')
-        quote_filler = urwid.Filler(quote_text, valign='top', top=1, bottom=1)
-        v_padding = urwid.Padding(quote_filler, left=1, right=1)
-        quote_box = urwid.LineBox(v_padding)
-
-        # Assemble the widgets
-        layout = urwid.Frame(header=header, body=quote_box, footer=menu)
-        def handle_input(key):
-            if key == 'R' or key == 'r':
-                refresh(main_loop, '')
-
-            if key == 'Q' or key == 'q':
-                raise urwid.ExitMainLoop()
-
-        def refresh(_loop, _data):
-            print("refresh")
-
-        main_loop = urwid.MainLoop(layout, palette, unhandled_input=handle_input)
-        main_loop.set_alarm_in(0, refresh)
-        main_loop.run()
+        self.main_loop = urwid.MainLoop(self.view.layout, self.view.palette, unhandled_input=self.handle_input)
+        self.main_loop.set_alarm_in(0, self.refresh)
+        self.main_loop.run()
 
 
 if __name__ == "__main__":
