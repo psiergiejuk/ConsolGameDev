@@ -13,8 +13,8 @@ import sys
 import urwid
 
 __author__ = "Paweł Siergiejuk"
-__date__ = "20/03/2018"
-__time__ = "23:22:27"
+__date__ = "31/03/2018"
+__time__ = "21:20:57"
 __version__ = "v0.0"
 __email__ = "pawelsiergiejuk@gmail.com"
 __status__ = "Development"
@@ -51,7 +51,7 @@ class GameView():
     def build_screen(self):
         mode = self.controller.get_game_mode()
         if mode == GameModes.WELCOME:
-            text = urwid.Text(u' Dev Game ' + __version__)
+            text = urwid.Text(u' Dev Game ' + self.controller.VERSION)
             header = urwid.AttrMap(text, 'titlebar')
             div = urwid.Divider()
             info = urwid.Text(u'Press F12 to Exit')
@@ -62,6 +62,9 @@ class GameView():
             text = urwid.Text(u'Do you realy want to exit? y/n')
             header = urwid.AttrMap(text, 'titlebar')
             self.layout = urwid.Filler(header, valign='top')
+            print(11111111111111111)
+        if self.controller.main_loop:
+            self.controller.main_loop.draw_screen()
             
 
     def refresh_view(self):

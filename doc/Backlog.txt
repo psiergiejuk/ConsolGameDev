@@ -1,5 +1,5 @@
 S1      As a user I want to see Welcome Screen Dev Game (Done)
-S2      As a user I want to exit the game with confirmation when I use Ctr+Q key (In progress)
+S2      As a user I want to exit the game with confirmation when I use ESCAPE key (In progress)
 S4      As a user I want to have console to be able to type code in it (No run)
 S5      As a user I want to run code from console in python interpreter
 S6      As a user I want to have aceess to User Object to be able to edit user

@@ -9,60 +9,91 @@ Cool consol game
 This is main file of the game
 """
 
+import pygame
 import sys
-import urwid
 
-from GameView import GameView
-from GameModel import GameModel
 
 __author__ = "Paweł Siergiejuk"
-__date__ = "20/03/2018"
-__time__ = "23:23:07"
-__version__ = "v0.0"
+__date__ = "18/04/2018"
+__time__ = "23:20:18"
+__version__ = "v0.2"
 __email__ = "pawelsiergiejuk@gmail.com"
 __status__ = "Development"
 
 
-class GameController():
-    """
-        (MVC) Class that control model and view
 
-    """
+class GameState():
+    """Object that store information about current 
+        Game state"""
     
+    INTRO = 0
+    GAME = 1
+    EXITING = 9
+
     def __init__(self):
-        self.game = GameModel()
-        self.view = GameView(self)
-        self.main_loop = None
+        self.state = self.INTRO
 
-    def handle_input(self, key):
-        if key == 'f12':
-            self.confirm_exit()
-        else:
-            pass
+    def start_game(self):
+        self.state = self.GAME
 
-    def confirm_exit(self):
-        self.game.exit_request()
-        if self.view.confirm_exit():
-            raise urwid.ExitMainLoop()
+    def stop_game(self):
+        self.state = self.EXITING
 
-    def refresh(self, _loop, _data):
-        self.view.refresh_view()
-        self.main_loop.draw_screen()
-        self.main_loop.set_alarm_in(1, self.refresh)
-
-    def get_game_mode(self):
-        return self.game.get_game_mode()
-
-    def main(self):
+    def get(self):
+        return self.state
 
 
-        self.main_loop = urwid.MainLoop(self.view.layout, self.view.palette, unhandled_input=self.handle_input)
-        self.main_loop.set_alarm_in(0, self.refresh)
-        self.main_loop.run()
+class DevGame():
+    """Main Controller of Dev Game"""
+    ICON = "res/logo32x32.png"
+    VERSION = __version__
+    FPS = 20.0
+    FONT_SIZE = 32
+
+    def __init__(self):
+        pygame.display.set_icon(pygame.image.load(self.ICON))
+        pygame.display.set_caption("Dev Game " + self.VERSION)
+        self.clock = pygame.time.Clock()
+        self.screen = pygame.display.set_mode((640,480))
+        self.running = False
+        self.font = pygame.font.SysFont("Courier", self.FONT_SIZE)
+        self.state = GameState()
+
+    def start(self):
+        self.running = True
+
+        while self.running:
+            #read event
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    self.running = False
+            #limit frame rate to given value
+            self.clock.tick(self.FPS)
+            
+            #timing 
+            self.tick()
+
+            #draw the screen
+            self.screen.fill((0, 0, 0))
+            self.draw()
+            pygame.display.flip()
+            
+    def render_multiline_text(self, text, color, x, y):
+        for i, l in enumerate(text.splitlines()):
+            self.screen.blit(self.font.render(l, 1, color), (x, y + self.FONT_SIZE*i))
+
+    def tick(self):
+        pass
+
+    def draw(self):
+        self.render_multiline_text("Welcome to Dev Game\nIf you want to learn Python click ENTER!", (200, 200,200), 100, 100)
 
 
-if __name__ == "__main__":
-    game = GameController()
-    game.main()
-
+     
+if __name__=="__main__":
+    pygame.init()
+    game = DevGame()
+    game.start()
 
