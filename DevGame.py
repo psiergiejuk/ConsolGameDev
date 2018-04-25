@@ -11,16 +11,46 @@ This is main file of the game
 
 import pygame
 import sys
+import os
 
 
 __author__ = "Paweł Siergiejuk"
-__date__ = "18/04/2018"
-__time__ = "23:20:18"
+__date__ = "25/04/2018"
+__time__ = "22:54:42"
 __version__ = "v0.2"
 __email__ = "pawelsiergiejuk@gmail.com"
 __status__ = "Development"
 
 
+class MapModel():
+    """Model responsible for handling all item 
+        related to map"""
+    
+    resolution = (500,500)
+
+    def __init__(self):
+        self.map = [[None] * self.resolution[0]] * self.resolution[1]
+
+    def get(self):
+        return self.DATA
+
+
+class GameModel():
+    """Top level of model of the game """
+    
+
+    def __init__(self):
+        self.map = MapModel()
+
+
+    def start_game(self):
+        pass
+
+    def exit_game(self):
+        pass
+
+    def get_game_map(self):
+        pass
 
 class GameState():
     """Object that store information about current 
@@ -45,7 +75,8 @@ class GameState():
 
 class DevGame():
     """Main Controller of Dev Game"""
-    ICON = "res/logo32x32.png"
+    ICON = os.path.join("res", "logo32x32.png")
+    WELCOME_IMAGE = os.path.join("res", "welcomeScreen.png")
     VERSION = __version__
     FPS = 20.0
     FONT_SIZE = 32
@@ -53,11 +84,13 @@ class DevGame():
     def __init__(self):
         pygame.display.set_icon(pygame.image.load(self.ICON))
         pygame.display.set_caption("Dev Game " + self.VERSION)
+        self.bg_image = pygame.image.load(self.WELCOME_IMAGE)
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((640,480))
+        self.screen = pygame.display.set_mode((800,600))
         self.running = False
         self.font = pygame.font.SysFont("Courier", self.FONT_SIZE)
         self.state = GameState()
+        pygame.display.toggle_fullscreen()
 
     def start(self):
         self.running = True
@@ -76,7 +109,7 @@ class DevGame():
             self.tick()
 
             #draw the screen
-            self.screen.fill((0, 0, 0))
+            self.screen.blit(self.bg_image, (0, 0))
             self.draw()
             pygame.display.flip()
             
@@ -88,7 +121,8 @@ class DevGame():
         pass
 
     def draw(self):
-        self.render_multiline_text("Welcome to Dev Game\nIf you want to learn Python click ENTER!", (200, 200,200), 100, 100)
+        #self.render_multiline_text("Welcome to Dev Game\nIf you want to learn Python click ENTER!", (200, 200,200), 100, 100)
+        pass
 
 
      
